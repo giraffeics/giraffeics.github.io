@@ -1,0 +1,173 @@
+<html>
+	<head>
+		<script src="util.js"></script>
+		<script src="tasks.js"></script>
+		<script src="taskDisplay.js"></script>
+		<script src="timer.js"></script>
+		<script src="metronome.js"></script>
+		<script>
+			var contentP;
+			var counter;
+			var timerLabelElement;
+			
+			var audioStart = null;
+			var audioEnd = null;
+			var audioMetronome = null;
+			
+			function onLoad()
+			{
+				contentP = document.getElementById('contentP');
+				counter = document.getElementById('counter');
+				
+				timerLabelElement = document.getElementById('timerLabel');
+				setTimerLabelElement(timerLabelElement);
+				startTimer(6);
+				
+				audioStart = document.getElementById('audio_start');
+				audioEnd = document.getElementById('audio_end');
+				audioMetronome = document.getElementById('audio_metronome');
+				
+				setMetronomeAudio(audioMetronome);
+				
+				document.addEventListener('keydown', onKeyDown);
+			}
+
+			// ADD TASKS
+			var myTask = {meta:{}, properties:{}};
+
+			// Septuplet Patterns
+			myTask.meta.name = "Sextuplet Patterns";
+			myTask.meta.description = "All sextuplet patterns using $picking for four minutes straight.";
+			myTask.meta.time = 10;//;
+			myTask.meta.timeBreak = 5;
+			myTask.meta.tempo = 123;
+			
+			myTask.properties.picking = ['upstroke', 'downstroke', 'legatto'];
+
+			addTask(myTask);
+
+			// Slow Scales
+			myTask = {meta:{}, properties:{}};
+			myTask.meta.name = "Slow Scales";
+			myTask.meta.description = 'Slow scale in $mode mode for three minutes.';
+			myTask.meta.time = 7;//3 * 60;
+			myTask.meta.timeBreak = 4;
+			myTask.meta.tempo = 70;
+			
+			myTask.properties.mode = ['Ionian', 'Dorian', 'Phrygian', 'Lydian', 'Mixolydian', 'Aeolian', 'Locrian'];
+
+			addTask(myTask);
+
+			// END ADDING TASKS
+
+			shuffleTasks();
+			
+			var breakMode = true;
+			
+			function beginBreak()
+			{
+				breakMode = true;
+			
+				var nTask = getCurrentTask();
+				
+				startTimer(nTask.timeBreak);
+				setTimerCallback(advanceTask);
+				
+				stopMetronome();
+				
+				if(audioEnd != null)
+					audioEnd.play();
+			}
+			
+			function onKeyDown(event)
+			{
+				switch(event.code)
+				{
+					case 'ArrowUp':
+						metronomeTempo += 5;
+						break;
+					case 'ArrowDown':
+						metronomeTempo -= 5;
+						break;
+					case 'Space':
+						onPauseButton();
+						break;
+				}
+			}
+			
+			var paused = false;
+			
+			function onPauseButton()
+			{
+				if(paused && currentTask != null)
+				{
+					paused = false;
+					
+					if(breakMode)
+					{
+						startTimer(5);
+					}
+					else
+					{
+						resumeTimer();
+						startMetronome();
+					}
+				}
+				else
+				{
+					paused = true;
+					
+					pauseTimer();
+					stopMetronome();
+				}
+			}
+			
+			var currentTask = null;
+
+			function advanceTask()
+			{
+				currentTask = getNextTask();
+				
+				if(currentTask == null)
+				{
+					contentP.innerHTML = 'No more tasks! Click "next task" to reshuffle and start again!';
+					pauseTimer();
+				}
+				else
+				{
+					breakMode = false;
+				
+					contentP.innerHTML = taskToHTML(currentTask);
+					counter.innerHTML = '[' + nextTask + ' / ' + tasks.length + ']';
+					
+					startTimer(currentTask.time);
+					setTimerCallback(beginBreak);
+					
+					metronomeTempo = currentTask.tempo;
+					startMetronome();
+					
+					if(audioStart != null)
+						audioStart.play();
+				}
+			}
+		</script>
+	</head>
+	<body onload="onLoad()" style="max-width: 70vw; margin-left:auto; margin-right:auto; margin-top:2em; text-align:center; font-size:1.5em;">
+		<button onClick="advanceTask()" style="font-size:1em;">Next Task</button> <span id="counter"></span>
+		<p id="contentP">Click "Next Task" to start!</p>
+		
+		<p>TIME: <span id="timerLabel"></span></p>
+		
+		<audio id="audio_start">
+			<source src="start.ogg" type="audio/ogg"/>
+		</audio>
+		
+		<audio id="audio_end">
+			<source src="end.ogg" type="audio/ogg"/>
+		</audio>
+		
+		<audio id="audio_metronome">
+			<source src="metronome.ogg" type="audio/ogg"/>
+		</audio>
+	</body>
+</html>

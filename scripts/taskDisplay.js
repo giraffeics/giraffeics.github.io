@@ -1,7 +1,7 @@
 function taskToHTML(task)
 {
-	var name = task.name;
-	var description = task.description;
+	var name = task.meta.name;
+	var description = task.meta.description;
 	var keys = Object.keys(task);
 	
 	if(description)
@@ -10,7 +10,7 @@ function taskToHTML(task)
 		{
 			var key = keys[i];
 			
-			if(key == 'description' || key == 'name' || key == 'meta' || key == 'time' || key == 'timeBreak' || key == 'tempo')
+			if(key == 'meta')
 				continue;
 				
 			description = description.split('$' + key).join(task[key]);
@@ -27,7 +27,7 @@ function taskToHTML(task)
 		{
 			var key = keys[i];
 			
-			if(key == 'description' || key == 'name' || key == 'meta' || key == 'time' || key == 'timeBreak' || key == 'tempo')
+			if(key == 'meta')
 				continue;
 				
 			if(!listBegun)

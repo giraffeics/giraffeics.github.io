@@ -62,23 +62,6 @@
 
 			shuffleTasks();
 			
-			var breakMode = true;
-			
-			function beginBreak()
-			{
-				breakMode = true;
-			
-				var nTask = getCurrentTask();
-				
-				startTimer(nTask.timeBreak);
-				setTimerCallback(advanceTask);
-				
-				stopMetronome();
-				
-				if(audioEnd != null)
-					audioEnd.play();
-			}
-			
 			function onKeyDown(event)
 			{
 				switch(event.code)
@@ -122,6 +105,23 @@
 				}
 			}
 			
+			var breakMode = true;
+			
+			function beginBreak()
+			{
+				breakMode = true;
+			
+				var nTask = getCurrentTask();
+				
+				startTimer(nTask.meta.timeBreak);
+				setTimerCallback(advanceTask);
+				
+				stopMetronome();
+				
+				if(audioEnd != null)
+					audioEnd.play();
+			}
+			
 			var currentTask = null;
 
 			function advanceTask()
@@ -138,12 +138,12 @@
 					breakMode = false;
 				
 					contentP.innerHTML = taskToHTML(currentTask);
-					counter.innerHTML = '[' + nextTask + ' / ' + tasks.length + ']';
+					counter.innerHTML = '[' + nextTask + ' / ' + variations.length + ']';
 					
-					startTimer(currentTask.time);
+					startTimer(currentTask.meta.time);
 					setTimerCallback(beginBreak);
 					
-					metronomeTempo = currentTask.tempo;
+					metronomeTempo = currentTask.meta.tempo;
 					startMetronome();
 					
 					if(audioStart != null)

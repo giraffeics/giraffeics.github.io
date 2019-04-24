@@ -3,14 +3,16 @@ var variations = [];
 var nextTask = 0;
 var avoidFactor = 0.3;
 
-function addTask(task)
-{
-	tasks[tasks.length] = task;
-}
+var defaultMeta = {
+	name: 'My Task',
+	tempo: 80,
+	time: 60,
+	timeBreak: 30
+};
 
 function shuffleTasks()
 {
-	variations = tasks;
+	createVariations();
 	
 	nextTask = 0;
 	
@@ -47,31 +49,23 @@ function shuffleTasks()
 		for(var j=picked+1; j<srcLength; j++)
 			srcVariations[j-1] = srcVariations[j];
 	}
-	
-	tasks = variations;
 }
 
-//*
-// add a task (all of its property combinations) to the list of tasks
-function addTask(task)	
+function createVariations()
 {
-	var name = task.meta.name;
-	var time = task.meta.time;
-	var timeBreak = task.meta.timeBreak;
-	var tempo = task.meta.tempo;
+	variations = [];
 	
+	for(var i=0; i<tasks.length; i++)
+	{
+		addTaskVariations(tasks[i]);
+	}
+}
+
+function addTaskVariations(task)
+{
 	var keys = Object.keys(task.properties);
 	
 	var combinations = [{}];
-	combinations[0].name = name;
-	combinations[0].time = time;
-	combinations[0].timeBreak = timeBreak;
-	combinations[0].tempo = tempo;
-	
-	if(task.meta.hasOwnProperty('description'))
-	{
-		combinations[0].description = task.meta.description;
-	}
 	
 	// iterate through all task properties
 	for(var i=0; i<keys.length; i++)
@@ -99,29 +93,62 @@ function addTask(task)
 		combinations = newCombinations;
 	}
 	
+	// add meta data and register variations
 	for(var i=0; i<combinations.length; i++)
 	{
-		tasks[tasks.length] = combinations[i];
+		combinations[i].meta = task.meta;	// add meta data at the end to maintain the object reference
+		variations[variations.length] = combinations[i];
 	}
-}	//*/
+}
+
+//*
+// add a task to the list of tasks
+function addTask(task)	
+{
+	// clone the task to avoid potential reference issues
+	task = clone(task);
+	
+	// add meta properties if they do not exist
+	if(task.hasOwnProperty('meta'))
+	{
+		var defaultMetaKeys = Object.keys(defaultMeta);
+		
+		// check for each individual property present in defaultMeta
+		for(var i=0; i<defaultMetaKeys.length; i++)
+		{
+			if(!task.meta.hasOwnProperty(defaultMetaKeys[i]))
+			{
+				task[defaultMetaKeys[i]] = defaultMeta[defaultMetaKeys[i]];
+			}
+		}
+	}
+	else
+	{
+		task.meta = clone(defaultMeta);
+	}
+	
+	tasks[tasks.length] = task;
+	
+	return task;
+}
 
 function getCurrentTask()
 {
 	if(nextTask <= 0)
 		return null;
 	
-	return tasks[nextTask - 1];
+	return variations[nextTask - 1];
 }
 
 function getNextTask()
 {
 	ret = null;
 	
-	if(nextTask > tasks.length)
+	if(nextTask > variations.length)
 		shuffleTasks();
 	
-	if(nextTask != tasks.length)
-		ret = tasks[nextTask];
+	if(nextTask != variations.length)
+		ret = variations[nextTask];
 	
 	nextTask++;
 	

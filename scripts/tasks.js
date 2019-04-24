@@ -105,9 +105,6 @@ function addTaskVariations(task)
 // add a task to the list of tasks
 function addTask(task)	
 {
-	// clone the task to avoid potential reference issues
-	task = clone(task);
-	
 	// add meta properties if they do not exist
 	if(task.hasOwnProperty('meta'))
 	{
@@ -128,8 +125,6 @@ function addTask(task)
 	}
 	
 	tasks[tasks.length] = task;
-	
-	return task;
 }
 
 function getCurrentTask()

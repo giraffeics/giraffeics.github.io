@@ -1,29 +1,44 @@
-var mMetronomeAudio = null;
-var mMetronomeTimeout = null;
+var metronome = {
 
-var metronomeTempo = 60;
+	audio:null,
+	timeout:null,
 
-function setMetronomeAudio(audio)
-{
-	mMetronomeAudio = audio;
-}
-
-function playMetronomeSound()
-{
-	mMetronomeTimeout = window.setTimeout(playMetronomeSound, 60000 / metronomeTempo);
+	tempo:60,
 	
-	mMetronomeAudio.pause();
-	mMetronomeAudio.currentTime = 0;
-	mMetronomeAudio.play();
-}
+	setAudio:function(audio)
+	{
+		this.audio = audio;
+	},
 
-function stopMetronome()
-{
-	window.clearTimeout(mMetronomeTimeout);
-}
+	playSound:function()
+	{
+		this.audio.pause();
+		this.audio.currentTime = 0;
+		this.audio.play();
+	},
 
-function startMetronome()
-{
-	stopMetronome();
-	playMetronomeSound();
-}
+	stop:function()
+	{
+		window.clearTimeout(this.timeout);
+	},
+
+	start:function()
+	{
+		this.stop();
+		this.playSound();
+		
+		// Obtain static versions of member variables for interval function
+		var mSelf = this;
+		var mTempo = this.tempo;
+		
+		// Interval function
+		this.timeout = window.setInterval(function(){
+			
+			if(mSelf.tempo != mTempo)	// If the tempo has changed, restart the interval timer
+				mSelf.start();
+			else
+				mSelf.playSound();		// Otherwise, play the click sound
+			
+		}, 60000 / this.tempo);
+	}
+};

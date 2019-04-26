@@ -9,6 +9,8 @@
 			var contentP;
 			var counter;
 			var timerLabelElement;
+			var tempoLabelElement;
+			var pauseButton;
 			
 			var audioStart = null;
 			var audioEnd = null;
@@ -16,19 +18,26 @@
 			
 			function onLoad()
 			{
+				// obtain ID'd elements
 				contentP = document.getElementById('contentP');
 				counter = document.getElementById('counter');
-				
+				pauseButton = document.getElementById('pauseButton');
 				timerLabelElement = document.getElementById('timerLabel');
+				tempoLabelElement = document.getElementById('tempoLabel');
+				
+				// set up timer
 				setTimerLabelElement(timerLabelElement);
 				startTimer(6);
 				
+				// obtain audios
 				audioStart = document.getElementById('audio_start');
 				audioEnd = document.getElementById('audio_end');
 				audioMetronome = document.getElementById('audio_metronome');
 				
-				setMetronomeAudio(audioMetronome);
+				// set up metronome
+				metronome.setAudio(audioMetronome);
 				
+				// add key listener
 				document.addEventListener('keydown', onKeyDown);
 			}
 
@@ -59,6 +68,12 @@
 			addTask(myTask);
 
 			// END ADDING TASKS
+			
+			function setMetronomeTempo(tempo)
+			{
+				metronome.tempo = tempo;
+				tempoLabelElement.innerHTML = tempo;
+			}
 
 			shuffleTasks();
 			
@@ -67,10 +82,10 @@
 				switch(event.code)
 				{
 					case 'ArrowUp':
-						metronomeTempo += 5;
+						setMetronomeTempo(metronome.tempo + 5);
 						break;
 					case 'ArrowDown':
-						metronomeTempo -= 5;
+						setMetronomeTempo(metronome.tempo - 5);
 						break;
 					case 'Space':
 						onPauseButton();
@@ -85,6 +100,7 @@
 				if(paused && currentTask != null)
 				{
 					paused = false;
+					pauseButton.innerHTML = 'Pause';
 					
 					if(breakMode)
 					{
@@ -93,15 +109,16 @@
 					else
 					{
 						resumeTimer();
-						startMetronome();
+						metronome.start();
 					}
 				}
 				else
 				{
 					paused = true;
+					pauseButton.innerHTML = 'Resume';
 					
 					pauseTimer();
-					stopMetronome();
+					metronome.stop();
 				}
 			}
 			
@@ -116,7 +133,7 @@
 				startTimer(nTask.meta.timeBreak);
 				setTimerCallback(advanceTask);
 				
-				stopMetronome();
+				metronome.stop();
 				
 				if(audioEnd != null)
 					audioEnd.play();
@@ -143,20 +160,28 @@
 					startTimer(currentTask.meta.time);
 					setTimerCallback(beginBreak);
 					
-					metronomeTempo = currentTask.meta.tempo;
-					startMetronome();
+					setMetronomeTempo(currentTask.meta.tempo);
+					metronome.start();
 					
 					if(audioStart != null)
 						audioStart.play();
 				}
 			}
 		</script>
+		<link rel="stylesheet" href="style.css" type="text/css"/>
 	</head>
-	<body onload="onLoad()" style="max-width: 70vw; margin-left:auto; margin-right:auto; margin-top:2em; text-align:center; font-size:1.5em;">
-		<button onClick="advanceTask()" style="font-size:1em;">Next Task</button> <span id="counter"></span>
+	<body onload="onLoad()">
+
+		<button onClick="advanceTask()">Next Task</button>
+		<button id="pauseButton" onClick="onPauseButton()">Pause</button>
+		<span id="counter"></span>
+		
 		<p id="contentP">Click "Next Task" to start!</p>
 		
-		<p>TIME: <span id="timerLabel"></span></p>
+		<p>
+			TIME: <span id="timerLabel"></span><br/>
+			TEMPO: <span id="tempoLabel"></span>
+		</p>
 		
 		<audio id="audio_start">
 			<source src="sounds/start.ogg" type="audio/ogg"/>

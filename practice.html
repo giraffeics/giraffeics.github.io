@@ -26,8 +26,7 @@
 				tempoLabelElement = document.getElementById('tempoLabel');
 				
 				// set up timer
-				setTimerLabelElement(timerLabelElement);
-				startTimer(6);
+				timer.setLabelElement(timerLabelElement);
 				
 				// obtain audios
 				audioStart = document.getElementById('audio_start');
@@ -104,11 +103,11 @@
 					
 					if(breakMode)
 					{
-						startTimer(5);
+						timer.start(5);
 					}
 					else
 					{
-						resumeTimer();
+						timer.resume();
 						metronome.start();
 					}
 				}
@@ -117,7 +116,7 @@
 					paused = true;
 					pauseButton.innerHTML = 'Resume';
 					
-					pauseTimer();
+					timer.pause();
 					metronome.stop();
 				}
 			}
@@ -130,8 +129,8 @@
 			
 				var nTask = getCurrentTask();
 				
-				startTimer(nTask.meta.timeBreak);
-				setTimerCallback(advanceTask);
+				timer.start(nTask.meta.timeBreak);
+				timer.setCallback(advanceTask);
 				
 				metronome.stop();
 				
@@ -148,7 +147,7 @@
 				if(currentTask == null)
 				{
 					contentP.innerHTML = 'No more tasks! Click "next task" to reshuffle and start again!';
-					pauseTimer();
+					timer.pause();
 				}
 				else
 				{
@@ -157,8 +156,8 @@
 					contentP.innerHTML = taskToHTML(currentTask);
 					counter.innerHTML = '[' + nextTask + ' / ' + variations.length + ']';
 					
-					startTimer(currentTask.meta.time);
-					setTimerCallback(beginBreak);
+					timer.start(currentTask.meta.time);
+					timer.setCallback(beginBreak);
 					
 					setMetronomeTempo(currentTask.meta.tempo);
 					metronome.start();

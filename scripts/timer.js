@@ -1,58 +1,59 @@
-var timer = {};
-timer.timeout = null;
-timer.time = 0;
-timer.labelElement = null;
-timer.timeEndCallback = null;
+var timer = {
+	timeout:null,
+	time:0,
+	labelElement:null,
+	timeEndCallback:null,
 
-function setTimerCallback(callback)
-{
-	timer.timeEndCallback = callback;
-}
-
-function setTimerLabelElement(labelElement)
-{
-	timer.labelElement = labelElement;
-}
-
-function updateTimerVisual()
-{
-	if(timer.labelElement != null)	// update label text
+	setCallback:function(callback)
 	{
-		timer.labelElement.innerHTML = timer.time;
-	}
-}
+		this.timeEndCallback = callback;
+	},
 
-function updateTimer()
-{
-	timer.time--;
-	
-	updateTimerVisual();
-	
-	if(timer.time == 0)	// check if timer has reached end
+	setLabelElement:function(labelElement)
 	{
-		if(timer.timeEndCallback != null)
-			timer.timeEndCallback();
-		else
-			pauseTimer();
+		this.labelElement = labelElement;
+	},
+
+	updateVisual:function()
+	{
+		if(this.labelElement != null)	// update label text
+		{
+			this.labelElement.innerHTML = this.time;
+		}
+	},
+
+	update:function()
+	{
+		timer.time--;
+		
+		timer.updateVisual();
+		
+		if(timer.time == 0)	// check if timer has reached end
+		{
+			if(timer.timeEndCallback != null)
+				timer.timeEndCallback();
+			else
+				timer.pause();
+		}
+	},
+
+	pause:function()
+	{
+		window.clearTimeout(this.timeout);
+	},
+
+	resume:function()
+	{
+		this.pause();
+		timer.timeout = window.setInterval(this.update, 1000);
+	},
+
+	start:function(time)
+	{
+		this.pause();
+		
+		this.time = time;
+		this.updateVisual();
+		this.timeout = window.setInterval(this.update, 1000);
 	}
-}
-
-function pauseTimer()
-{
-	window.clearTimeout(timer.timeout);
-}
-
-function resumeTimer()
-{
-	pauseTimer();
-	timer.timeout = window.setInterval(updateTimer, 1000);
-}
-
-function startTimer(time)
-{
-	pauseTimer();
-	
-	timer.time = time;
-	updateTimerVisual();
-	timer.timeout = window.setInterval(updateTimer, 1000);
-}
+};

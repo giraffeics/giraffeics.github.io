@@ -10,6 +10,13 @@ var defaultMeta = {
 	timeBreak: 30
 };
 
+function clearTasks()
+{
+	tasks = [];
+	variations = [];
+	nextTask = 0;
+}
+
 function shuffleTasks()
 {
 	createVariations();

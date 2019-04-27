@@ -3,6 +3,7 @@
 		<script src="scripts/util.js"></script>
 		<script src="scripts/tasks.js"></script>
 		<script src="scripts/taskDisplay.js"></script>
+		<script src="scripts/taskGUI.js"></script>
 		<script src="scripts/timer.js"></script>
 		<script src="scripts/metronome.js"></script>
 		<script>
@@ -10,6 +11,7 @@
 			var counter;
 			var timerLabelElement;
 			var tempoLabelElement;
+			var taskGUIAreaElement;
 			var pauseButton;
 			
 			var audioStart = null;
@@ -24,6 +26,7 @@
 				pauseButton = document.getElementById('pauseButton');
 				timerLabelElement = document.getElementById('timerLabel');
 				tempoLabelElement = document.getElementById('tempoLabel');
+				taskGUIAreaElement = document.getElementById('taskGUIArea');
 				
 				// set up timer
 				timer.setLabelElement(timerLabelElement);
@@ -38,6 +41,16 @@
 				
 				// add key listener
 				document.addEventListener('keydown', onKeyDown);
+				
+				// set up task GUI
+				taskGUI.setContainerGetter(function(){	// Adds a div to the GUI area and returns the new div
+					var ret = document.createElement('div');
+					ret.class = 'taskGUIPart';
+					taskGUIAreaElement.appendChild(ret);
+					return ret;
+				});
+				
+				taskGUI.readTasks();
 			}
 
 			// ADD TASKS
@@ -181,6 +194,8 @@
 			TIME: <span id="timerLabel"></span><br/>
 			TEMPO: <span id="tempoLabel"></span>
 		</p>
+		
+		<div id="taskGUIArea"></div>
 		
 		<audio id="audio_start">
 			<source src="sounds/start.ogg" type="audio/ogg"/>

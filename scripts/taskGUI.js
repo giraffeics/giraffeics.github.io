@@ -333,6 +333,12 @@ var taskGUI = {
 			
 			if(name != null && name != '')
 			{
+				if(this.task.properties.hasOwnProperty(name))
+				{
+					alert('A property with that name already exists!');
+					return;
+				}
+				
 				var keyID = Object.keys(this.task.properties).length;
 				
 				// add property to task

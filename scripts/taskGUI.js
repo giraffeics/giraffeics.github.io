@@ -26,6 +26,7 @@ var taskGUI = {
 	addPart:function(task)
 	{
 		var part = {};
+		part.task = task;
 		
 		if(this.getContainer != null)
 		{
@@ -129,23 +130,23 @@ var taskGUI = {
 				
 				this.editorDiv.appendChild(table);
 				this.container.appendChild(this.editorDiv);
-			};
+			}
 			
-			// ADD TASK PROPERTIES
-			
-			var keys = Object.keys(task.properties);
-			for(var i=0; i<keys.length; i++)
+			// makes a GUI for the property corresponding to the key ID
+			part.makePropertyGUI = function(keyID)
 			{
-				var mKeyID = i;
+				var keys = Object.keys(this.task.properties);
+				var mKeyID = keyID;
+				var mSelf = this;
 				
 				// create & append td
 				var mLabel = document.createElement('td');
-				mLabel.innerHTML = keys[i];
-				part.row1.appendChild(mLabel);
+				mLabel.innerHTML = keys[keyID];
+				this.row1.appendChild(mLabel);
 				
 				// create buttons
 				var mButton1 = document.createElement('button');
-				mButton1.onclick = function(){part.showEditor(mKeyID);};
+				mButton1.onclick = function(){mSelf.showEditor(mKeyID);};
 				mButton1.innerHTML = 'Edit';
 				
 				var mButton2 = document.createElement('button');
@@ -161,9 +162,9 @@ var taskGUI = {
 					if(newKey != null)
 					{
 						// ensure that another key is not overwritten
-						for(var j=0; j<mKeys.length; j++)
+						for(var i=0; i<mKeys.length; i++)
 						{
-							if(j != mKeyID && mKeys[j] == newKey)
+							if(i != mKeyID && mKeys[i] == newKey)
 								return;
 						}
 						
@@ -179,13 +180,21 @@ var taskGUI = {
 				td.appendChild(mButton1);
 				td.appendChild(mButton2);
 				td.appendChild(mButton3);
-				part.row2.appendChild(td);
+				this.row2.appendChild(td);
+			};
+			
+			// ADD TASK PROPERTIES
+			
+			var keys = Object.keys(task.properties);
+			for(var i=0; i<keys.length; i++)
+			{
+				part.makePropertyGUI(i);
 			}
 			
 			// create & append td for "add property" button
 			var button = document.createElement('button');
 			button.innerHTML = 'Add...';
-			button.onclick = function(){part.addProperty();};
+			button.onclick = function(){part.promptAddProperty();};
 			
 			part.addButtonTD = document.createElement('td');
 			part.addButtonTD.appendChild(button);
@@ -194,13 +203,19 @@ var taskGUI = {
 			part.task = task;
 		}
 		
-		part.addProperty = function()
+		part.promptAddProperty = function()
 		{
 			var name = prompt('Property name: ', 'My Property');
 			
 			if(name != null && name != '')
 			{
-				alert('yeet, ' + this.task.meta.name + ', ' + name);
+				// add property to task
+				this.task.properties[name] = '';
+				
+				// create GUI for property
+				this.row2.removeChild(this.addButtonTD);
+				this.makePropertyGUI(Object.keys(this.task.properties).length-1);
+				this.row2.appendChild(this.addButtonTD);
 			}
 		};
 		

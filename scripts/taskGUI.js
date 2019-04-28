@@ -229,7 +229,7 @@ var taskGUI = {
 			td = document.createElement('td');
 			part.tempoBox = document.createElement('input');
 			part.tempoBox.type = 'number';
-			part.tempoBox.size = 6;
+			part.tempoBox.size = 4;
 			part.tempoBox.min = 20;
 			part.tempoBox.max = 999;
 			part.tempoBox.value = task.meta.tempo;
@@ -238,6 +238,46 @@ var taskGUI = {
 			};
 			
 			td.appendChild(part.tempoBox);
+			part.row2.appendChild(td);
+			
+			// ADD TIME EDITOR
+			
+			td = document.createElement('td');
+			td.innerHTML = 'Time';
+			part.row1.appendChild(td);
+			
+			td = document.createElement('td');
+			part.timeBox = document.createElement('input');
+			part.timeBox.type = 'number';
+			part.timeBox.size = 4;
+			part.timeBox.min = 5;
+			part.timeBox.max = 999;
+			part.timeBox.value = task.meta.time;
+			part.timeBox.oninput = function(){
+				part.task.meta.time = part.timeBox.value;
+			};
+			
+			td.appendChild(part.timeBox);
+			part.row2.appendChild(td);
+			
+			// ADD BREAK TIME EDITOR
+			
+			td = document.createElement('td');
+			td.innerHTML = 'Break';
+			part.row1.appendChild(td);
+			
+			td = document.createElement('td');
+			part.breakBox = document.createElement('input');
+			part.breakBox.type = 'number';
+			part.breakBox.size = 4;
+			part.breakBox.min = 5;
+			part.breakBox.max = 999;
+			part.breakBox.value = task.meta.timeBreak;
+			part.breakBox.oninput = function(){
+				part.task.meta.timeBreak = part.breakBox.value;
+			};
+			
+			td.appendChild(part.breakBox);
 			part.row2.appendChild(td);
 			
 			// ADD EDIT DESCRIPTION BUTTON

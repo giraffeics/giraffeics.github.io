@@ -180,11 +180,29 @@ var taskGUI = {
 				td.appendChild(mButton2);
 				td.appendChild(mButton3);
 				part.row2.appendChild(td);
-				
 			}
+			
+			// create & append td for "add property" button
+			var button = document.createElement('button');
+			button.innerHTML = 'Add...';
+			button.onclick = function(){part.addProperty();};
+			
+			part.addButtonTD = document.createElement('td');
+			part.addButtonTD.appendChild(button);
+			part.row2.appendChild(part.addButtonTD);
 			
 			part.task = task;
 		}
+		
+		part.addProperty = function()
+		{
+			var name = prompt('Property name: ', 'My Property');
+			
+			if(name != null && name != '')
+			{
+				alert('yeet, ' + this.task.meta.name + ', ' + name);
+			}
+		};
 		
 		this.parts[this.parts.length] = part;
 		return part;

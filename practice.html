@@ -12,6 +12,7 @@
 			var timerLabelElement;
 			var tempoLabelElement;
 			var taskGUIAreaElement;
+			var timerTempoLabelsElement;
 			var pauseButton;
 			
 			var audioStart = null;
@@ -27,6 +28,7 @@
 				timerLabelElement = document.getElementById('timerLabel');
 				tempoLabelElement = document.getElementById('tempoLabel');
 				taskGUIAreaElement = document.getElementById('taskGUIArea');
+				timerTempoLabelsElement = document.getElementById('timerTempoLabels');
 				
 				// set up timer
 				timer.setLabelElement(timerLabelElement);
@@ -85,6 +87,26 @@
 			{
 				metronome.tempo = tempo;
 				tempoLabelElement.innerHTML = tempo;
+			}
+			
+			// returns true if we are in edit mode
+			function inEditMode()
+			{
+				return (taskGUIAreaElement.style.display != none);
+			}
+			
+			function setEditMode(editMode)
+			{
+				if(editMode)
+				{
+					taskGUIAreaElement.style.display = 'block';
+					timerTempoLabelsElement.style.display = 'none';
+				}
+				else
+				{
+					taskGUIAreaElement.style.display = 'none';
+					timerTempoLabelsElement.style.display = 'block';
+				}
 			}
 
 			shuffleTasks();
@@ -160,10 +182,12 @@
 				if(currentTask == null)
 				{
 					contentP.innerHTML = 'No more tasks! Click "next task" to reshuffle and start again!';
+					setEditMode(true);
 					timer.pause();
 				}
 				else
 				{
+					setEditMode(false);
 					breakMode = false;
 				
 					contentP.innerHTML = taskToHTML(currentTask);
@@ -190,7 +214,7 @@
 		
 		<p id="contentP">Click "Next Task" to start!</p>
 		
-		<p>
+		<p id="timerTempoLabels" style="display:none;">
 			TIME: <span id="timerLabel"></span><br/>
 			TEMPO: <span id="tempoLabel"></span>
 		</p>

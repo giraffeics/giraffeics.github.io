@@ -60,28 +60,117 @@
 
 			// ADD TASKS
 			var myTask = {meta:{}, properties:{}};
-
-			// Septuplet Patterns
-			myTask.meta.name = "Sextuplet Patterns";
-			myTask.meta.description = "All sextuplet patterns using $picking for four minutes straight.";
-			myTask.meta.time = 10;//;
-			myTask.meta.timeBreak = 5;
-			myTask.meta.tempo = 123;
 			
-			myTask.properties.picking = ['upstroke', 'downstroke', 'legatto'];
+			// SINGLE STRING STUFF
+
+			// Five-Note Patterns
+			myTask.meta.name = "Five-Note Patterns";
+			myTask.meta.description = "Single-string five-note pattern using $picking.";
+			myTask.meta.time = 90;
+			myTask.meta.timeBreak = 30;
+			myTask.meta.tempo = 80;
+			
+			myTask.properties.picking = ['alternate picking', 'legatto'];
+			myTask.properties.repetition = [1, 2];
 
 			addTask(myTask);
+			
+			// Single-String Septuplets
+			myTask.meta.name = "Single-String Septuplets";
+			myTask.meta.description = "Single-string septuplets using $picking for two minutes.";
+			myTask.meta.time = 2 * 60;
+			myTask.meta.timeBreak = 45;
+			myTask.meta.tempo = 80;
+			
+			myTask.properties.picking = ['alternate', 'legatto'];
+			myTask.properties.repetition = [1, 2];
 
-			// Slow Scales
+			addTask(myTask);
+			
+			// ALTERNATE
+
+			// Single-Mode Scales
 			myTask = {meta:{}, properties:{}};
-			myTask.meta.name = "Slow Scales";
-			myTask.meta.description = 'Slow scale in $mode mode for three minutes.';
-			myTask.meta.time = 7;//3 * 60;
-			myTask.meta.timeBreak = 4;
-			myTask.meta.tempo = 70;
+			myTask.meta.name = "Single-Position Scale";
+			myTask.meta.description = 'Alternate picking ascent/descent in $mode mode.';
+			myTask.meta.time = 2 * 60;
+			myTask.meta.timeBreak = 45;
+			myTask.meta.tempo = 95;
 			
 			myTask.properties.mode = ['Ionian', 'Dorian', 'Phrygian', 'Lydian', 'Mixolydian', 'Aeolian', 'Locrian'];
 
+			addTask(myTask);
+			
+			// Seven-Mode Runs
+			myTask = {meta:{}, properties:{}};
+			myTask.meta.name = "Seven-Mode Run";
+			myTask.meta.description = 'Alternate picking seven-mode run starting on $mode mode.';
+			myTask.meta.time = 2 * 60;
+			myTask.meta.timeBreak = 45;
+			myTask.meta.tempo = 80;
+			
+			myTask.properties.mode = ['Ionian', 'Dorian', 'Phrygian', 'Lydian', 'Mixolydian', 'Aeolian', 'Locrian'];
+
+			addTask(myTask);
+			
+			// LEGATO
+			
+			// Single-Mode Legato Scale
+			myTask = {meta:{}, properties:{}};
+			myTask.meta.name = "Single-Position Legato";
+			myTask.meta.description = 'Legato ascent/descents.';
+			myTask.meta.time = 2 * 60;
+			myTask.meta.timeBreak = 45;
+			myTask.meta.tempo = 80;
+			
+			myTask.properties.repetition = [1, 2, 3, 4];
+
+			addTask(myTask);
+			
+			// RIFFS
+			
+			// Facepaint 7/8 Riff
+			myTask = {meta:{}, properties:{}};
+			myTask.meta.name = "Facepaint 7/8 Riff";
+			myTask.meta.description = 'Facepaint - 7/8 Riff.';
+			myTask.meta.time = 2 *60;
+			myTask.meta.timeBreak = 30;
+			myTask.meta.tempo = 170;
+			
+			myTask.properties.repetition = [1, 2];
+			
+			addTask(myTask);
+			
+			// Facepaint Chorus Riff
+			myTask = clone(myTask);
+			myTask.meta.name = "Facepaint Chorus Riff";
+			myTask.meta.description = 'Facepaint - Chorus Riff.'
+			myTask.meta.tempo = 75;
+			
+			addTask(myTask);
+			
+			// Pest Control Tapping Riff
+			myTask = clone(myTask);
+			myTask.meta.name = 'Pest Control Tapping Riff';
+			myTask.meta.description = 'Pest Control - Tapping Riff.';
+			myTask.meta.tempo = 115;
+			
+			addTask(myTask);
+			
+			// Pest Control High Riff
+			myTask = clone(myTask);
+			myTask.meta.name = 'Pest Control High Riff';
+			myTask.meta.description = 'Pest Control - High Riff.';
+			myTask.meta.tempo = 95;
+			
+			addTask(myTask);
+			
+			// Pest Control Sliding Riff
+			myTask = clone(myTask);
+			myTask.meta.name = 'Pest Control Sliding Riff';
+			myTask.meta.description = 'Pest Control - Sliding Riff.';
+			myTask.meta.tempo = 105;
+			
 			addTask(myTask);
 
 			// END ADDING TASKS

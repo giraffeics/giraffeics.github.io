@@ -27,6 +27,7 @@ var taskGUI = {
 	{
 		var part = {};
 		part.task = task;
+		var mTask = task;
 		
 		if(this.getContainer != null)
 		{
@@ -51,8 +52,6 @@ var taskGUI = {
 			td.appendChild(part.nameBox);
 			part.row2.appendChild(td);
 			
-			var mTask = task;
-			
 			// CREATE PROPERTY EDITOR
 			
 			part.hideEditor = function()
@@ -68,24 +67,37 @@ var taskGUI = {
 			{
 				if(this.hasOwnProperty('editorDiv'))
 				{
-					var enteredValues = this.editorTextArea.value.split(',');
-					var newValues = [];
-					
-					// ensure empty or null values are removed
-					for(var i=0; i<enteredValues.length; i++)
+					if(this.editorKeyID >= 0)	// if the editor is not for the description...
 					{
-						if(enteredValues[i] != null && enteredValues[i] != '')
-							newValues[newValues.length] = enteredValues[i];
+						var enteredValues = this.editorTextArea.value.split(',');
+						var newValues = [];
+						
+						// ensure empty or null values are removed
+						for(var i=0; i<enteredValues.length; i++)
+						{
+							if(enteredValues[i] != null && enteredValues[i] != '')
+								newValues[newValues.length] = enteredValues[i];
+						}
+						
+						if(newValues.length > 0)
+						{
+							var key = Object.keys(this.task.properties)[this.editorKeyID];
+							this.task.properties[key] = newValues;
+							this.hideEditor();
+						}
+						else
+							alert('No valid values entered!');
 					}
-					
-					if(newValues.length > 0)
+					else	// if the editor is for the description...
 					{
-						var key = Object.keys(this.task.properties)[this.editorKeyID];
-						this.task.properties[key] = newValues;
-						this.hideEditor();
+						if(this.editorTextArea.value != null && this.editorTextArea.value != '')
+						{
+							this.task.meta.description = this.editorTextArea.value;
+							this.hideEditor();
+						}
+						else
+							alert('No valid values entered!');
 					}
-					else
-						alert('No valid values entered!');
 				}
 			}
 			
@@ -97,7 +109,17 @@ var taskGUI = {
 				this.editorDiv = document.createElement('div');
 				
 				var mKeys = Object.keys(this.task.properties);
-				var mKey = mKeys[keyID];
+				var mKey = '';
+				var propName = '';
+				
+				// negative keyID = description
+				if(keyID >= 0)
+				{
+					mKey = mKeys[keyID];
+					propName = mKeys[keyID];
+				}
+				else
+					propName = 'Description';
 				
 				// create HTML elements
 				var table = document.createElement('table');				// table & row
@@ -108,7 +130,7 @@ var taskGUI = {
 				tr.appendChild(td);
 				
 				var label = document.createElement('span');					// property name label
-				label.innerHTML = mKeys[keyID] + ': <br/>';
+				label.innerHTML = propName + ': <br/>';
 				td.appendChild(label);
 				
 				var button = document.createElement('button');				// 'apply' button
@@ -125,8 +147,13 @@ var taskGUI = {
 				td.appendChild(part.editorTextArea);
 				
 				// set textArea value
-				for(var i=0; i<this.task.properties[mKey].length; i++)
-					part.editorTextArea.value += this.task.properties[mKey][i] + ',';
+				if(keyID >= 0)
+				{
+					for(var i=0; i<this.task.properties[mKey].length; i++)
+						this.editorTextArea.value += this.task.properties[mKey][i] + ',';
+				}
+				else
+					this.editorTextArea.value = this.task.meta.description;
 				
 				this.editorDiv.appendChild(table);
 				this.container.appendChild(this.editorDiv);
@@ -139,10 +166,14 @@ var taskGUI = {
 				var mKeyID = keyID;
 				var mSelf = this;
 				
-				// create & append td
+				// create & append label td
 				var mLabel = document.createElement('td');
 				mLabel.innerHTML = keys[keyID];
 				this.row1.appendChild(mLabel);
+				
+				// create and append buttons td
+				var mTd = document.createElement('td');
+				this.row2.appendChild(mTd);
 				
 				// create buttons
 				var mButton1 = document.createElement('button');
@@ -150,7 +181,15 @@ var taskGUI = {
 				mButton1.innerHTML = 'Edit';
 				
 				var mButton2 = document.createElement('button');
-				mButton2.onclick = function(){alert('delete..?');};
+				mButton2.onclick = function(){
+					if(confirm('Are you sure you want to delete the property "' + Object.keys(mSelf.task.properties)[mKeyID] + '"?'))
+					{
+						var curKeys = Object.keys(mSelf.task.properties);
+						delete mSelf.task.properties[curKeys[mKeyID]];
+						mSelf.row1.removeChild(mLabel);
+						mSelf.row2.removeChild(mTd);
+					}
+				};
 				mButton2.innerHTML = 'Delete';
 				
 				var mButton3 = document.createElement('button');
@@ -175,13 +214,47 @@ var taskGUI = {
 				};
 				mButton3.innerHTML = 'Rename';
 				
-				// create & append td
-				td = document.createElement('td');
-				td.appendChild(mButton1);
-				td.appendChild(mButton2);
-				td.appendChild(mButton3);
-				this.row2.appendChild(td);
+				// append buttons to td
+				mTd.appendChild(mButton1);
+				mTd.appendChild(mButton2);
+				mTd.appendChild(mButton3);
 			};
+			
+			// ADD TEMPO EDITOR
+			
+			td = document.createElement('td');
+			td.innerHTML = 'Tempo';
+			part.row1.appendChild(td);
+			
+			td = document.createElement('td');
+			part.tempoBox = document.createElement('input');
+			part.tempoBox.type = 'number';
+			part.tempoBox.size = 6;
+			part.tempoBox.min = 20;
+			part.tempoBox.max = 999;
+			part.tempoBox.value = task.meta.tempo;
+			part.tempoBox.oninput = function(){
+				part.task.meta.tempo = part.tempoBox.value;
+			};
+			
+			td.appendChild(part.tempoBox);
+			part.row2.appendChild(td);
+			
+			// ADD EDIT DESCRIPTION BUTTON
+			
+			td = document.createElement('td');
+			td.innerHTML = 'Description';
+			part.row1.appendChild(td);
+			
+			td = document.createElement('td');
+			var button = document.createElement('button');
+			button.innerHTML = 'Edit';
+			button.onclick = function()
+			{
+				part.showEditor(-1);	// show description editor
+			}
+			td.appendChild(button);
+			part.row2.appendChild(td);
 			
 			// ADD TASK PROPERTIES
 			
@@ -209,13 +282,18 @@ var taskGUI = {
 			
 			if(name != null && name != '')
 			{
+				var keyID = Object.keys(this.task.properties).length;
+				
 				// add property to task
-				this.task.properties[name] = '';
+				this.task.properties[name] = [''];
 				
 				// create GUI for property
 				this.row2.removeChild(this.addButtonTD);
-				this.makePropertyGUI(Object.keys(this.task.properties).length-1);
+				this.makePropertyGUI(keyID);
 				this.row2.appendChild(this.addButtonTD);
+				
+				// show property editor
+				this.showEditor(keyID);
 			}
 		};
 		

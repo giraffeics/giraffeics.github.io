@@ -26,11 +26,10 @@ function loadTasks()
 
 function saveTasks()
 {
-	Cookies.set('tasksSaved', 'true');
+	Cookies.set('tasksSaved', 'true', { expires: 365 });
 	
 	for(var i=0; i<tasks.length; i++)
 	{
-		console.log(JSON.stringify(tasks[i]));
-		Cookies.set('task' + i, tasks[i]);
+		Cookies.set('task' + i, tasks[i], { expires: 365 });
 	}
 }

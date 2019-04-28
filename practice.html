@@ -88,6 +88,9 @@
 			
 			function onKeyDown(event)
 			{
+				if(inEditMode())
+					return;
+			
 				switch(event.code)
 				{
 					case 'ArrowUp':

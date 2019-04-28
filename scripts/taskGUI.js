@@ -8,6 +8,21 @@ var taskGUI = {
 		this.getContainer = getter;
 	},
 	
+	createTask:function()
+	{
+		var name = prompt('New task name: ', 'My Task');
+		
+		// If the user did not cancel, create & add the task
+		if(name != null)
+		{
+			var task = {properties:{}};
+			task.meta = clone(defaultMeta);
+			task.meta.name = name;
+			addTask(task);
+			this.addPart(task);
+		}
+	},
+	
 	addPart:function(task)
 	{
 		var part = {};
@@ -61,9 +76,6 @@ var taskGUI = {
 						if(enteredValues[i] != null && enteredValues[i] != '')
 							newValues[newValues.length] = enteredValues[i];
 					}
-					
-					console.log(enteredValues);
-					console.log(newValues);
 					
 					if(newValues.length > 0)
 					{

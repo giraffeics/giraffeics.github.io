@@ -10,7 +10,7 @@ var taskGUI = {
 	
 	createTask:function()
 	{
-		var name = prompt('New task name: ', 'My Task');
+		var name = prompt('New exercise name: ', 'My Exercise');
 		
 		// If the user did not cancel, create & add the task
 		if(name != null)
@@ -308,7 +308,7 @@ var taskGUI = {
 			
 			var button = document.createElement('button');
 			button.innerHTML = 'Delete Exercise';
-			button.onclick = function(){alert('not yet implemented!');};
+			button.onclick = function(){part.promptDeleteExercise();};
 			
 			part.deleteButtonTD = document.createElement('td');
 			part.deleteButtonTD.appendChild(button);
@@ -325,6 +325,16 @@ var taskGUI = {
 			part.row2.appendChild(part.addButtonTD);
 			
 			part.task = task;
+		}
+		
+		// deletes the task
+		part.promptDeleteExercise = function()
+		{
+			if(confirm('Delete the exercise "' + this.task.meta.name + '"?'))
+			{
+				removeTask(this.task);
+				this.container.parentNode.removeChild(this.container);
+			}
 		}
 		
 		part.promptAddProperty = function()

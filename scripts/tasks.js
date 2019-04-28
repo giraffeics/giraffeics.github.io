@@ -108,7 +108,18 @@ function addTaskVariations(task)
 	}
 }
 
-//*
+// remove a task from the list of tasks
+function removeTask(task)
+{
+	for(var i=0; i<tasks.length; i++)
+	{
+		if(tasks[i] == task)
+		{
+			tasks.splice(i, 1);
+		}
+	}
+}
+
 // add a task to the list of tasks
 function addTask(task)	
 {

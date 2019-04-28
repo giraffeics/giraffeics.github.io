@@ -304,9 +304,20 @@ var taskGUI = {
 				part.makePropertyGUI(i);
 			}
 			
-			// create & append td for "add property" button
+			// ADD "DELETE EXERCISE" BUTTON
+			
 			var button = document.createElement('button');
-			button.innerHTML = 'Add...';
+			button.innerHTML = 'Delete Exercise';
+			button.onclick = function(){alert('not yet implemented!');};
+			
+			part.deleteButtonTD = document.createElement('td');
+			part.deleteButtonTD.appendChild(button);
+			part.row1.appendChild(part.deleteButtonTD);
+			
+			// ADD "ADD PROPERTY" Button
+			
+			button = document.createElement('button');
+			button.innerHTML = 'Add Property';
 			button.onclick = function(){part.promptAddProperty();};
 			
 			part.addButtonTD = document.createElement('td');
@@ -329,8 +340,10 @@ var taskGUI = {
 				
 				// create GUI for property
 				this.row2.removeChild(this.addButtonTD);
+				this.row1.removeChild(this.deleteButtonTD);
 				this.makePropertyGUI(keyID);
 				this.row2.appendChild(this.addButtonTD);
+				this.row1.appendChild(this.deleteButtonTD);
 				
 				// show property editor
 				this.showEditor(keyID);

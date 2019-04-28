@@ -1,9 +1,12 @@
 <html>
 	<head>
+		<script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+		
 		<script src="scripts/util.js"></script>
 		<script src="scripts/tasks.js"></script>
 		<script src="scripts/taskDisplay.js"></script>
 		<script src="scripts/taskGUI.js"></script>
+		<script src="scripts/taskSaveLoad.js"></script>
 		<script src="scripts/timer.js"></script>
 		<script src="scripts/metronome.js"></script>
 		<script>
@@ -203,6 +206,17 @@
 						audioStart.play();
 				}
 			}
+			
+			function promptSaveRoutine()
+			{
+				if(confirm('Are you sure you want to save this routine?'))
+				{
+					saveTasks();
+					alert('Routine saved!');
+				}
+			}
+			
+			loadTasks();
 		</script>
 		<link rel="stylesheet" href="style.css" type="text/css"/>
 	</head>
@@ -219,10 +233,9 @@
 			TEMPO: <span id="tempoLabel"></span>
 		</p>
 		
-		
 		<div id="taskGUIArea">
-			<button onClick="taskGUI.createTask()">Add Exercise</button>
-			<button onClick="alert('not yet implemented!');">Save Routine</button>
+			<button onClick="taskGUI.createTask();">Add Exercise</button>
+			<button onClick="promptSaveRoutine();">Save Routine</button>
 		</div>
 		
 		<audio id="audio_start">

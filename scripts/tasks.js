@@ -14,7 +14,7 @@ function clearTasks()
 {
 	tasks = [];
 	variations = [];
-	nextTask = 0;
+	nextTask = 1;
 }
 
 function shuffleTasks()

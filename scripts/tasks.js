@@ -1,6 +1,6 @@
 var tasks = [];
 var variations = [];
-var nextTask = 0;
+var nextTask = 1;
 var avoidFactor = 0.3;
 
 var defaultMeta = {
@@ -40,7 +40,7 @@ function shuffleTasks()
 		// pick a valid number outside the avoid range (or give up after 5 tries)
 		for(var j=0; j<5 && stillPicking; j++)
 		{
-			console.log('pick ' + j + '...');
+			//console.log('pick ' + j + '...');
 			
 			picked = Math.floor(Math.random() * srcLength);
 			
@@ -153,7 +153,7 @@ function getCurrentTask()
 	return variations[nextTask - 1];
 }
 
-function getNextTask()
+function getNextTask(advance)
 {
 	ret = null;
 	
@@ -163,7 +163,8 @@ function getNextTask()
 	if(nextTask != variations.length)
 		ret = variations[nextTask];
 	
-	nextTask++;
+	if(typeof(advance) == 'undefined' || advance)
+		nextTask++;
 	
 	return ret;
 }

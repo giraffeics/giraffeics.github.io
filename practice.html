@@ -83,8 +83,6 @@
 					timerTempoLabelsElement.style.display = 'block';
 				}
 			}
-
-			shuffleTasks();
 			
 			function onKeyDown(event)
 			{
@@ -140,15 +138,24 @@
 			{
 				breakMode = true;
 			
-				var nTask = getCurrentTask();
-				
-				timer.start(nTask.meta.timeBreak);
-				timer.setCallback(advanceTask);
+				var currTask = getCurrentTask();
+				var nextTask = getNextTask(false);
 				
 				metronome.stop();
 				
 				if(audioEnd != null)
 					audioEnd.play();
+				
+				if(nextTask != null)
+				{
+					timer.start(currTask.meta.timeBreak);
+					timer.setCallback(advanceTask);
+					contentP.innerHTML = 'Next: ' + taskToHTML(nextTask);
+				}
+				else
+				{
+					advanceTask();
+				}
 			}
 			
 			var currentTask = null;
@@ -162,6 +169,7 @@
 					contentP.innerHTML = 'No more tasks! Click "next task" to reshuffle and start again!';
 					setEditMode(true);
 					timer.pause();
+					metronome.stop();
 				}
 				else
 				{

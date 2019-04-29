@@ -4,7 +4,7 @@ function taskToHTML(task)
 	var description = task.meta.description;
 	var keys = Object.keys(task);
 	
-	if(description)
+	if(typeof(description) != 'undefined' && description != null && description != '' && description != 'undefined')
 	{
 		for(var i=0; i<keys.length; i++)
 		{
@@ -20,8 +20,8 @@ function taskToHTML(task)
 	}
 	else
 	{
-		var ret = name;
-		var listBegun = false;
+		var ret = name + ': <br/>';
+		//var listBegun = false;
 		
 		for(var i=0; i<keys.length; i++)
 		{
@@ -30,17 +30,20 @@ function taskToHTML(task)
 			if(key == 'meta')
 				continue;
 				
+			/*
 			if(!listBegun)
 			{
 				ret += ': <ul>';
 				listBegun = true;
-			}
+			}	
 			
-			ret += '<li>' + key + ': ' + task[key] + '</li>';
+			ret += '<li>' + key + ': ' + task[key] + '</li>'; //*/
+			ret += key + ': ' + task[key] + '<br/>';
 		}
 		
+		/*
 		if(listBegun)
-			ret += '</ul>';
+			ret += '</ul>';	//*/
 		
 		return ret;
 	}

@@ -22,6 +22,9 @@ function loadTasks()
 		
 		addTask(taskCookie);
 	}
+	
+	// save tasks to keep the cookie valid
+	saveTasks();
 }
 
 function saveTasks()

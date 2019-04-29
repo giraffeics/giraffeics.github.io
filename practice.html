@@ -199,6 +199,26 @@
 				}
 			}
 			
+			// ADD EXAMPLE TASK
+			var exampleTask = {properties:{}};
+			exampleTask.meta = clone(defaultMeta);
+			exampleTask.meta.name = 'Example Exercise';
+			exampleTask.meta.description = 'Practice the $type scale on the $fret fret.';
+			
+			exampleTask.properties.type = ['major', 'minor', 'major pentatonic', 'minor pentatonic'];
+			exampleTask.properties.fret = ['seventh', 'ninth', 'twelfth'];
+			
+			addTask(exampleTask);
+			
+			// SHOW HELP
+			function onHelpButton()
+			{
+				alert(	'Create some exercises and click the "Next Task" button to start. '+
+						'Once you\'ve started, use the up and down arrow keys to adjust the tempo. Use the spacebar '+
+						'to pause (make sure no buttons are highlighted).');
+			}
+			
+			// LOAD TASKS FROM COOKIES IF THEY EXIST
 			loadTasks();
 		</script>
 		<link rel="stylesheet" href="style.css" type="text/css"/>
@@ -207,14 +227,15 @@
 
 		<button onClick="advanceTask()">Next Task</button>
 		<button id="pauseButton" onClick="onPauseButton()">Pause</button>
+		<button id="helpButton" onClick="onHelpButton()">Help</button>
 		<span id="counter"></span>
 		
 		<p id="contentP">Click "Next Task" to start!</p>
 		
-		<p id="timerTempoLabels" style="display:none;">
+		<div id="timerTempoLabels" style="display:none;">
 			TIME: <span id="timerLabel"></span><br/>
 			TEMPO: <span id="tempoLabel"></span>
-		</p>
+		</div>
 		
 		<div id="taskGUIArea">
 			<button onClick="taskGUI.createTask();">Add Exercise</button>

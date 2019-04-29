@@ -1,6 +1,9 @@
 var taskGUI = {
 	parts:[],
 	
+	descriptionHelp:'A property name with a dollar sign before it will be replaced with the value of that property.',
+	propertyHelp:'Type in a list of possible values for this property, separated by commas.',
+	
 	getContainer:null,
 	
 	setContainerGetter:function(getter)
@@ -146,14 +149,22 @@ var taskGUI = {
 				part.editorTextArea.cols = 60;
 				td.appendChild(part.editorTextArea);
 				
+				var helpTd =  document.createElement('td');					// third table data, with help info
+				tr.appendChild(helpTd);
+				
 				// set textArea value
 				if(keyID >= 0)
 				{
+					helpTd.innerHTML = '<p>' + taskGUI.propertyHelp + '</p>';
+					
 					for(var i=0; i<this.task.properties[mKey].length; i++)
 						this.editorTextArea.value += this.task.properties[mKey][i] + ',';
 				}
 				else
+				{
+					helpTd.innerHTML = '<p>' + taskGUI.descriptionHelp + '</p>';
 					this.editorTextArea.value = this.task.meta.description;
+				}
 				
 				this.editorDiv.appendChild(table);
 				this.container.appendChild(this.editorDiv);

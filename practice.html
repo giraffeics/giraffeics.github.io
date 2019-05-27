@@ -17,6 +17,7 @@
 			var taskGUIAreaElement;
 			var timerTempoLabelsElement;
 			var pauseButton;
+			var fileInput;
 			
 			var audioStart = null;
 			var audioEnd = null;
@@ -32,6 +33,10 @@
 				tempoLabelElement = document.getElementById('tempoLabel');
 				taskGUIAreaElement = document.getElementById('taskGUIArea');
 				timerTempoLabelsElement = document.getElementById('timerTempoLabels');
+				fileInput = document.getElementById('fileInput');
+				
+				// set up file input
+				fileInput.addEventListener('change', promptUploadRoutine, false);
 				
 				// set up timer
 				timer.setLabelElement(timerLabelElement);
@@ -218,6 +223,50 @@
 						'to pause (make sure no buttons are highlighted).');
 			}
 			
+			// SAVE THE ROUTINE TO A FILE
+			function promptDownloadRoutine()
+			{
+				var element = document.createElement('a');
+				element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(JSON.stringify(tasks)));
+				element.setAttribute('download', 'routine.json');
+
+				element.style.display = 'none';
+				document.body.appendChild(element);
+
+				element.click();
+
+				document.body.removeChild(element);
+			}
+			
+			// LOAD A ROUTINE FROM A FILE
+			function promptUploadRoutine(e)
+			{
+				var file = e.target.files[0];
+				
+				if (!file)
+				{
+					return;
+				}
+				
+				var reader = new FileReader();
+				
+				reader.onload = function(e)
+				{
+					var contents = e.target.result;
+					taskGUI.clear();
+					clearTasks();
+					
+					fileTasks = JSON.parse(contents);
+					
+					for(var i=0; i<fileTasks.length; i++)
+						addTask(fileTasks[i]);
+						
+					taskGUI.readTasks();
+				};
+				
+				reader.readAsText(file);
+			}
+			
 			// LOAD TASKS FROM COOKIES IF THEY EXIST
 			loadTasks();
 		</script>
@@ -240,6 +289,9 @@
 		<div id="taskGUIArea">
 			<button onClick="taskGUI.createTask();">Add Exercise</button>
 			<button onClick="promptSaveRoutine();">Save Routine</button>
+			<button onClick="promptDownloadRoutine();">Download Routine</button>
+			<button onClick="fileInput.click();">Upload Routine</button>
+			<input type="file" id="fileInput" style="display:none"></input>
 		</div>
 		
 		<audio id="audio_start">

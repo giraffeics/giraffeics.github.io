@@ -6,6 +6,14 @@ var taskGUI = {
 	
 	getContainer:null,
 	
+	clear:function()
+	{
+		for(var i=this.parts.length-1; i>=0; i--)
+		{
+			this.parts[i].remove();
+		}
+	},
+	
 	setContainerGetter:function(getter)
 	{
 		this.getContainer = getter;
@@ -338,13 +346,18 @@ var taskGUI = {
 			part.task = task;
 		}
 		
+		part.remove = function()
+		{
+			removeTask(this.task);
+			this.container.parentNode.removeChild(this.container);
+		}
+		
 		// deletes the task
 		part.promptDeleteExercise = function()
 		{
 			if(confirm('Delete the exercise "' + this.task.meta.name + '"?'))
 			{
-				removeTask(this.task);
-				this.container.parentNode.removeChild(this.container);
+				this.remove();
 			}
 		}
 		

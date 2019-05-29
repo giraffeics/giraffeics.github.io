@@ -5,6 +5,7 @@ var taskGUI = {
 	propertyHelp:'Type in a list of possible values for this property, separated by commas.',
 	
 	getContainer:null,
+	externalUpdateFunc:null,
 	
 	clear:function()
 	{
@@ -14,9 +15,21 @@ var taskGUI = {
 		}
 	},
 	
+	
 	setContainerGetter:function(getter)
 	{
 		this.getContainer = getter;
+	},
+	
+	setUpdateCallback:function(callback)
+	{
+		this.externalUpdateFunc = callback;
+	},
+	
+	callExternalUpdate:function()
+	{
+		if(this.externalUpdateFunc != null)
+			this.externalUpdateFunc();
 	},
 	
 	createTask:function()
@@ -109,6 +122,8 @@ var taskGUI = {
 						else
 							alert('No valid values entered!');
 					}
+					
+					taskGUI.callExternalUpdate();
 				}
 			}
 			
@@ -350,6 +365,7 @@ var taskGUI = {
 		{
 			removeTask(this.task);
 			this.container.parentNode.removeChild(this.container);
+			taskGUI.callExternalUpdate();
 		}
 		
 		// deletes the task
@@ -387,10 +403,15 @@ var taskGUI = {
 				
 				// show property editor
 				this.showEditor(keyID);
+				
+				taskGUI.callExternalUpdate();
 			}
 		};
 		
 		this.parts[this.parts.length] = part;
+		
+		this.callExternalUpdate();
+		
 		return part;
 	},
 	

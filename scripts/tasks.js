@@ -17,6 +17,40 @@ function clearTasks()
 	nextTask = 1;
 }
 
+function sanitizeTask(task)
+{
+	task.meta.tempo = Number(task.meta.tempo);
+	task.meta.time = Number(task.meta.time);
+	task.meta.timeBreak = Number(task.meta.timeBreak);
+}
+
+function getTotalTaskTime()
+{
+	var ret = 0;
+	
+	console.log('hhh');
+	
+	for(var i=0; i<tasks.length; i++)
+	{
+		var cTime = tasks[i].meta.time + tasks[i].meta.timeBreak;
+		var keys = Object.keys(tasks[i].properties);
+		
+		console.log('Base time ' + cTime + ', ' + keys.length + ' keys.');
+		
+		for(var j=0; j<keys.length; j++)
+		{
+			var property = tasks[i].properties[keys[j]];
+			
+			if(property.length > 0)
+				cTime *= property.length;
+		}
+		
+		ret += cTime;
+	}
+	
+	return ret;
+}
+
 function shuffleTasks()
 {
 	createVariations();

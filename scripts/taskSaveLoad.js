@@ -19,7 +19,7 @@ function loadTasks()
 			return;
 		
 		console.log(taskCookie);
-		
+		sanitizeTask(taskCookie);
 		addTask(taskCookie);
 	}
 	

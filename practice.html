@@ -18,6 +18,7 @@
 			var timerTempoLabelsElement;
 			var pauseButton;
 			var fileInput;
+			var totalTimeSpan;
 			
 			var audioStart = null;
 			var audioEnd = null;
@@ -34,6 +35,7 @@
 				taskGUIAreaElement = document.getElementById('taskGUIArea');
 				timerTempoLabelsElement = document.getElementById('timerTempoLabels');
 				fileInput = document.getElementById('fileInput');
+				totalTimeSpan = document.getElementById('totalTimeSpan');
 				
 				// set up file input
 				fileInput.addEventListener('change', promptUploadRoutine, false);
@@ -61,6 +63,16 @@
 				});
 				
 				taskGUI.readTasks();
+				
+				taskGUI.setUpdateCallback(updateTotalTimeDisplay);
+				
+				// display total task time
+				updateTotalTimeDisplay();
+			}
+			
+			function updateTotalTimeDisplay()
+			{
+				totalTimeSpan.innerHTML = "" + Math.floor(getTotalTaskTime() / 60) + ":" + (getTotalTaskTime() % 60);
 			}
 			
 			function setMetronomeTempo(tempo)
@@ -259,7 +271,10 @@
 					fileTasks = JSON.parse(contents);
 					
 					for(var i=0; i<fileTasks.length; i++)
+					{
+						sanitizeTask(fileTasks[i]);
 						addTask(fileTasks[i]);
+					}
 						
 					taskGUI.readTasks();
 				};
@@ -292,6 +307,7 @@
 			<button onClick="promptDownloadRoutine();">Download Routine</button>
 			<button onClick="fileInput.click();">Upload Routine</button>
 			<input type="file" id="fileInput" style="display:none"></input>
+			<p style="margin:0.65em;">Total Time: <span id="totalTimeSpan">00:00</span></p>
 		</div>
 		
 		<audio id="audio_start">

@@ -222,6 +222,7 @@ var taskGUI = {
 						delete mSelf.task.properties[curKeys[mKeyID]];
 						mSelf.row1.removeChild(mLabel);
 						mSelf.row2.removeChild(mTd);
+						taskGUI.callExternalUpdate();
 					}
 				};
 				mButton2.innerHTML = 'Delete';
@@ -268,7 +269,8 @@ var taskGUI = {
 			part.tempoBox.max = 999;
 			part.tempoBox.value = task.meta.tempo;
 			part.tempoBox.oninput = function(){
-				part.task.meta.tempo = part.tempoBox.value;
+				part.task.meta.tempo = Number(part.tempoBox.value);
+				taskGUI.callExternalUpdate();
 			};
 			
 			td.appendChild(part.tempoBox);
@@ -288,7 +290,8 @@ var taskGUI = {
 			part.timeBox.max = 999;
 			part.timeBox.value = task.meta.time;
 			part.timeBox.oninput = function(){
-				part.task.meta.time = part.timeBox.value;
+				part.task.meta.time = Number(part.timeBox.value);
+				taskGUI.callExternalUpdate();
 			};
 			
 			td.appendChild(part.timeBox);
@@ -308,7 +311,8 @@ var taskGUI = {
 			part.breakBox.max = 999;
 			part.breakBox.value = task.meta.timeBreak;
 			part.breakBox.oninput = function(){
-				part.task.meta.timeBreak = part.breakBox.value;
+				part.task.meta.timeBreak = Number(part.breakBox.value);
+				taskGUI.callExternalUpdate();
 			};
 			
 			td.appendChild(part.breakBox);

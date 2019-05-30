@@ -72,7 +72,12 @@
 			
 			function updateTotalTimeDisplay()
 			{
-				totalTimeSpan.innerHTML = "" + Math.floor(getTotalTaskTime() / 60) + ":" + (getTotalTaskTime() % 60);
+				var totalTime = getTotalTaskTime();
+				var seconds = totalTime % 60;
+				var secondsPrefix = '';
+				if(seconds < 10)
+					secondsPrefix = '0';
+				totalTimeSpan.innerHTML = "" + Math.floor(totalTime / 60) + ":" + secondsPrefix + seconds;
 			}
 			
 			function setMetronomeTempo(tempo)
